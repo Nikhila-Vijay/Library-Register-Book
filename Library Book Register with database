@@ -1,0 +1,127 @@
+from email import message
+from tkinter import *
+from tkinter import messagebox
+import mysql.connector
+from datetime import datetime
+
+
+conn=mysql.connector.connect(host="localhost",
+                             user="root",
+                             password="sreepathy2014!",
+                             database="new_library")
+
+cursor=conn.cursor()
+
+cursor.execute("CREATE TABLE IF NOT EXISTS books(id INT AUTO_INCREMENT PRIMARY KEY,Name VARCHAR(255), Age VARCHAR(255), E_mail VARCHAR(255), ContactNumber VARCHAR(255), LibraryId VARCHAR(255), NameoftheBook VARCHAR(255), DateofIssue VARCHAR(255), DateofReturn VARCHAR(255))")
+
+
+def validate_1(a):
+    if a.isdigit():
+        return True
+
+    return False 
+
+def validate_2(a):
+    if a.isalpha():
+        return True
+    return False    
+           
+
+
+root=Tk()
+root.title("Library Book Registration Form")
+root.geometry("800x300")
+
+
+hh=Label(root, text="Library Book Registration Form", font="TimesNewRoman 15 bold").grid(row=0, column=3)
+
+name_label=Label(root,text="Name:")
+name_label.grid(row=1, column=2)
+
+age_label=Label(root,text="Age:")
+age_label.grid(row=2, column=2)
+
+libraryId_label=Label(root,text="Library ID:",)
+libraryId_label.grid(row=1, column=5)
+
+e_mail_label=Label(root,text="E-mail:")
+e_mail_label.grid(row=3, column=2)
+
+
+contactnumber_label=Label(root,text="Contact No:")
+contactnumber_label.grid(row=4, column=2)
+
+nameofthebook_label=Label(root,text="Name Of The Book:")
+nameofthebook_label.grid(row=2, column=5)
+
+dateofIssue_label=Label(root,text="Date Of Issue:")
+dateofIssue_label.grid(row=3, column=5)
+
+dateofReturn_label=Label(root,text="Date Of Return:")
+dateofReturn_label.grid(row=4, column=5)
+
+
+
+
+name_labelvalue=StringVar
+age_labelvalue=StringVar
+contactnumber_labelvalue=StringVar
+e_mail_labelvalue=StringVar
+libraryId_labelvalue=StringVar
+nameofthebook_labelvalue=StringVar
+dateofIssue_labelvalue=StringVar
+dateofReturn_labelvalue=StringVar
+
+
+
+
+name_entry=Entry(root, textvariable=name_labelvalue, validate="key", validatecommand=(root.register(validate_2), "%P"))
+age_entry=Entry(root, textvariable=age_labelvalue, validate="key", validatecommand=(root.register(validate_1), "%P"))
+e_mail_entry=Entry(root, textvariable=e_mail_labelvalue)
+nameofthebook_entry=Entry(root, textvariable=nameofthebook_labelvalue)
+contactnumber_entry=Entry(root, textvariable=contactnumber_labelvalue, validate="key", validatecommand=(root.register(validate_1), "%P"))
+libraryId_entry=Entry(root, textvariable=libraryId_labelvalue, validate="key", validatecommand=(root.register(validate_1), "%P"))
+dateofIssue_entry=Entry(root, textvariable=dateofIssue_labelvalue)
+dateofReturn_entry=Entry(root, textvariable=dateofReturn_labelvalue)
+
+
+name_entry.grid(row=1, column=3)
+age_entry.grid(row=2, column=3)
+e_mail_entry.grid(row=3, column=3)
+contactnumber_entry.grid(row=4, column=3)
+libraryId_entry.grid(row=1, column=6)
+nameofthebook_entry.grid(row=2, column=6)
+dateofIssue_entry.grid(row=3, column=6)
+dateofReturn_entry.grid(row=4, column=6)
+
+
+def success():
+    print("Submitted Successfully")
+    messagebox.showinfo(title="Information", message="Submitted Successfully")
+
+    Name=name_entry.get()
+    Age=age_entry.get()
+    E_mail=e_mail_entry.get()
+    ContactNumber=contactnumber_entry.get()
+    LibraryId=libraryId_entry.get()
+    NameoftheBook=nameofthebook_entry.get()
+    DateofIssue=dateofIssue_entry.get()
+    DateofReturn=dateofReturn_entry.get()
+
+
+
+    cursor.execute("INSERT INTO books (Name, Age, E_mail, ContactNumber, LibraryId, NameoftheBook, DateofIssue, DateofReturn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",(Name, Age, E_mail, ContactNumber, LibraryId, NameoftheBook, DateofIssue, DateofReturn))
+    conn.commit()
+
+    name_entry.delete(0, END)
+    age_entry.delete(0, END)
+    e_mail_entry.delete(0, END)
+    contactnumber_entry.delete(0, END)
+    libraryId_entry.delete(0, END)
+    nameofthebook_entry.delete(0, END)
+    dateofIssue_entry.delete(0, END)
+    dateofReturn_entry.delete(0, END)
+
+submitButton=Button(root, text="Submit", command=success).grid(row=7, column=4)
+
+root.mainloop()
